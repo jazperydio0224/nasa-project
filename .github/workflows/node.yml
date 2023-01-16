@@ -21,7 +21,7 @@ jobs:
       # This action checks-out your repository under $GITHUB_WORKSPACE, so your workflow can access it.
       - uses: actions/checkout@v3
       # we can optionally set a name for our step
-      - name: Use Node.js version 18
+      - name: Use Node.js version 16
         # This action provides the following functionality for GitHub Actions users:
         # 1.Optionally downloading and caching distribution of the requested Node.js version, and adding it to the PATH
         # 2.Optionally caching npm/yarn/pnpm dependencies
@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-node@v3
         # setup node with a specific version of node (we are still on the same step)
         with:
-          node-version: "18"
+          node-version: "16"
       # we can also run our own command using -run
       # these are terminal commands
       - run: npm install

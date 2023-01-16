@@ -11,6 +11,15 @@ on:
 # we can set a 'needs' condition to make jobs depend on the result of previous jobs
 jobs:
   build:
+    # our create react app will not quit by default (watch mode - manual)
+    # by setting env -> CI to true, watch mode will be disabled
+    env:
+      CI: true
+    strategy:
+      # if we want to make sure that our app runs/works on different versions of node
+      # this will run 2 build jobs that will run in parallel
+      matrix:
+        node-version: [14.x, 16.x]
     # OS our server will run on
     # ubuntu-latest, macos-latest, windows-latest
     runs-on: ubuntu-latest
@@ -21,7 +30,7 @@ jobs:
       # This action checks-out your repository under $GITHUB_WORKSPACE, so your workflow can access it.
       - uses: actions/checkout@v3
       # we can optionally set a name for our step
-      - name: Use Node.js version 16
+      - name: Use Node.js version ${{ matrix.node-version }}
         # This action provides the following functionality for GitHub Actions users:
         # 1.Optionally downloading and caching distribution of the requested Node.js version, and adding it to the PATH
         # 2.Optionally caching npm/yarn/pnpm dependencies
@@ -30,10 +39,14 @@ jobs:
         uses: actions/setup-node@v3
         # setup node with a specific version of node (we are still on the same step)
         with:
-          node-version: "16"
+          # node-version: "16"
+          # the matrix strategy we have setup above (runs both version 14 and 16 in parallel)
+          node-version: ${{ matrix.node-version }}
       # we can also run our own command using -run
       # these are terminal commands
       - run: npm install
       - run: npm run build --prefix client
+      # test for client and server (outer package.json file)
+      - run: npm test
   # deploy:
   #   needs: build

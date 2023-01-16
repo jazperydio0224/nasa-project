@@ -15,11 +15,20 @@ jobs:
     # by setting env -> CI to true, watch mode will be disabled
     env:
       CI: true
+      # set MONGO_URL (not the one in our .env file) to the location of the Mongo Database
+      # that was setup on our steps below (name: Use MongoDB from Github actions)
+      # if this database, does not exist, one will be created for us when we connect to Mongo
+      # and we start reading and writing documents
+      MONGO_URL: mongodb://localhost/nasa
     strategy:
       # if we want to make sure that our app runs/works on different versions of node
       # this will run 2 build jobs that will run in parallel
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [14.x, 16.x],
+        # set mongodb-version where we want to test our code
+        # node -v 14.x -> mongodb -v 4.2, mongodb -v 4.4
+        # node -v 16.x -> mongodb -v 4.2, mongodb -v 4.4
+        mongodb-version: ['4.2', '4.4']
     # OS our server will run on
     # ubuntu-latest, macos-latest, windows-latest
     runs-on: ubuntu-latest
@@ -44,6 +53,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
       # we can also run our own command using -run
       # these are terminal commands
+
+      # use a separate MongoDB database for our test step
+      # use this GitHub Action from Github Marketplace
+      # This GitHub Action starts a MongoDB server or MongoDB replica set. By default, the MongoDB server is available on the default port 27017.
+      - name: MongoDB in GitHub Actions
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
       - run: npm run build --prefix client
       # test for client and server (outer package.json file)

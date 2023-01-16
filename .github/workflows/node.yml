@@ -24,11 +24,11 @@ jobs:
       # if we want to make sure that our app runs/works on different versions of node
       # this will run 2 build jobs that will run in parallel
       matrix:
-        node-version: [14.x, 16.x],
+        node-version: [14.x, 16.x]
         # set mongodb-version where we want to test our code
         # node -v 14.x -> mongodb -v 4.2, mongodb -v 4.4
         # node -v 16.x -> mongodb -v 4.2, mongodb -v 4.4
-        mongodb-version: ['4.2', '4.4']
+        mongodb-version: ["4.2", "4.4"]
     # OS our server will run on
     # ubuntu-latest, macos-latest, windows-latest
     runs-on: ubuntu-latest

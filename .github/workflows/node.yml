@@ -1,0 +1,39 @@
+name: NASA Project CI
+on:
+  # for when we push our code into our main repository
+  push:
+    branches: [main]
+  # for merging some changes that we made into the main repository
+  pull_request:
+    branches: [main]
+# jobs that we are suppose to run when one of the 2 events above is triggered
+# github actions will run the jobs in parallel side by side by default
+# we can set a 'needs' condition to make jobs depend on the result of previous jobs
+jobs:
+  build:
+    # OS our server will run on
+    # ubuntu-latest, macos-latest, windows-latest
+    runs-on: ubuntu-latest
+    # actions that are going to be taken on ubuntu whenever our build job is triggered
+    # by 'push' and 'pull_request'
+    steps:
+      # premade action from github actions (built-in) for us to use (scripts)
+      # This action checks-out your repository under $GITHUB_WORKSPACE, so your workflow can access it.
+      - uses: actions/checkout@v3
+      # we can optionally set a name for our step
+      - name: Use Node.js version 18
+        # This action provides the following functionality for GitHub Actions users:
+        # 1.Optionally downloading and caching distribution of the requested Node.js version, and adding it to the PATH
+        # 2.Optionally caching npm/yarn/pnpm dependencies
+        # 3.Registering problem matchers for error output
+        # 4.Configuring authentication for GPR or npm
+        uses: actions/setup-node@v3
+        # setup node with a specific version of node (we are still on the same step)
+        with:
+          node-version: "18"
+      # we can also run our own command using -run
+      # these are terminal commands
+      - run: npm install
+      - run: npm run build --prefix client
+  # deploy:
+  #   needs: build

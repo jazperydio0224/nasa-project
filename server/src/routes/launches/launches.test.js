@@ -12,9 +12,9 @@ describe("Launches API", () => {
   });
 
   // jest feature that ensures whatever is inside this code block will run after other code executions
-  // afterAll(async () => {
-  //   await mongoDisconnect();
-  // });
+  afterAll(async () => {
+    await mongoDisconnect();
+  });
 
   describe("Test GET /v1/launches", () => {
     test("It should respond with 200 success", async () => {

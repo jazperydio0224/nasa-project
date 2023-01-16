@@ -1,12 +1,14 @@
 const request = require("supertest");
 const app = require("../../app");
 const { mongoConnect, mongoDisconnect } = require("../../services/mongo");
+const { loadPlanetsData } = require("../../models/planets.model");
 
 describe("Launches API", () => {
   // jest feature that ensures whatever is inside this code block will run first before other code executions
   beforeAll(async () => {
     await mongoDisconnect();
     await mongoConnect();
+    await loadPlanetsData();
   });
 
   // jest feature that ensures whatever is inside this code block will run after other code executions
